@@ -5,7 +5,7 @@ import gradio as gr
 
 API_KEY = "2b109sYMpWyL50uehM9kUesDMO"  # Your API_KEY here
 PROJECT = "all";  # try specific floras: "weurope", "canada"…
-api_endpoint = f"https://my-api.plantnet.org/v2/identify/{PROJECT}?api-key={API_KEY}"
+api_endpoint = f"https://my-api.plantnet.org/v2/identify/{PROJECT}?api-key={API_KEY}&lang=zh"
 
 def identify_plant(image_paths, organs):
     files = []
@@ -32,7 +32,8 @@ def gradio_interface(files, organs):
     image_paths = [file.name for file in files]
     print(image_paths)
     status_code, json_result = identify_plant(image_paths, organs)
-    return json_result["bestMatch"], json_result
+    
+    return json_result.get("bestMatch",None), json_result
 with gr.Blocks() as demo:
     file_output = gr.File()
     upload_button = gr.UploadButton("Click to Upload a File", file_types=["image", "video"], file_count="multiple")
