@@ -32,13 +32,14 @@ def gradio_interface(files, organs):
     image_paths = [file.name for file in files]
     print(image_paths)
     status_code, json_result = identify_plant(image_paths, organs)
-    return json_result
+    return json_result["bestMatch"], json_result
 with gr.Blocks() as demo:
     file_output = gr.File()
     upload_button = gr.UploadButton("Click to Upload a File", file_types=["image", "video"], file_count="multiple")
     organs_input = gr.CheckboxGroup(choices=["flower", "leaf", "fruit", "bark", "habit"])
-    outputs = gr.outputs.JSON()
-    upload_button.upload(gradio_interface, inputs=[upload_button,organs_input], outputs = outputs)
+    best_match_text = gr.Textbox()
+    json_text = gr.JSON()
+    upload_button.upload(gradio_interface, inputs=[upload_button,organs_input], outputs = [best_match_text,json_text])
 
 #gr.Interface(fn=gradio_interface, inputs=[image_input, organs_input], outputs=outputs).launch()
 demo.launch(share=True)
